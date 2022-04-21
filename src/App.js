@@ -7,8 +7,9 @@ import InputGroup from 'react-bootstrap/InputGroup';
 import Modal from 'react-bootstrap/Modal';
 import './App.css';
 import 'bootstrap/dist/css/bootstrap.min.css';
-
-import React,{useRef, useState} from 'react';
+import html2canvas from "html2canvas";
+import downloadjs from 'downloadjs';
+import React,{useCallback, useRef, useState} from 'react';
 function App() {
   const [toptext,setTopText] = useState('');
   const [bottomtext,setBottomText] = useState('');
@@ -32,6 +33,13 @@ function App() {
   function handleBottomText(){
     setBottomText(bottomtextInput.current.value);
   }
+
+  const handleCapture = useCallback(async() =>{
+    const canvas = await html2canvas(document.getElementById('MEME'));
+    const dataURL = canvas.toDataURL('image/png');
+    downloadjs(dataURL,'download.png','image/png')
+  },[]);
+  
   return (
   
   <>
@@ -52,25 +60,28 @@ function App() {
           <Form.Label>Default file input example</Form.Label>
           <Form.Control type="file" accept="image/*" onChange={handleImgUpload} />
         </Form.Group>
-          <Button variant="primary" type="submit">
+          {/* <Button variant="primary" type="submit" onClick={handleCapture}>
             Submit
-          </Button>
+          </Button> */}
+          <a href="#" onClick={handleCapture}>
+            Capture
+          </a>
         </Form>
   </Col>
     <Col md={8}>
 
-    <Modal.Dialog>
-  <Modal.Header >
+    <Modal.Dialog id='MEME'>
+  <div className='text-center' >
     <Modal.Title>{toptext}</Modal.Title>
-  </Modal.Header>
+  </div>
 
   <Modal.Body>
     <p> <img ref={mainimg} style={{height:'auto',width:'100%'}}/></p>
   </Modal.Body>
 
-  <Modal.Footer>
-  <Modal.Title>{bottomtext}</Modal.Title>
-  </Modal.Footer>
+  <div className='text-center'>
+  <p>{bottomtext}</p>
+  </div>
 </Modal.Dialog>
     
     
