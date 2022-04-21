@@ -3,22 +3,35 @@ import Row from 'react-bootstrap/Row';
 import Col from 'react-bootstrap/Col';
 import Form from 'react-bootstrap/Form';
 import Button from 'react-bootstrap/Button';
-import InputGroup from 'react-bootstrap/InputGroup'
+import InputGroup from 'react-bootstrap/InputGroup';
+import Modal from 'react-bootstrap/Modal';
 import './App.css';
 import 'bootstrap/dist/css/bootstrap.min.css';
 
-import React,{useState} from 'react';
+import React,{useRef, useState} from 'react';
 function App() {
   const [toptext,setTopText] = useState('');
   const [bottomtext,setBottomText] = useState('');
   const [img,setimg] = useState();
+  const mainimg  = useRef('');
+  const toptextInput  = useRef('');
+  const bottomtextInput  = useRef('');
 
 
   function handleImgUpload(e){
+     
+    mainimg.current.src = URL.createObjectURL(e.target.files[0]);
+
     console.log(e.target.files[0]);
   }
 
+  function handleTopText(){
+    setTopText(toptextInput.current.value);
+  }
 
+  function handleBottomText(){
+    setBottomText(bottomtextInput.current.value);
+  }
   return (
   
   <>
@@ -27,19 +40,13 @@ function App() {
   <Col md={4}>
       <Form>
           <Form.Group className="mb-3" controlId="formBasicEmail">
-            <Form.Label>Email address</Form.Label>
-            <Form.Control type="email" placeholder="Enter email" />
-            <Form.Text className="text-muted">
-              We'll never share your email with anyone else.
-            </Form.Text>
+           
+            <Form.Control type="text" ref={toptextInput} placeholder="Enter Top Line Text here" onChange={handleTopText}/>
+    
           </Form.Group>
 
           <Form.Group className="mb-3" controlId="formBasicPassword">
-            <Form.Label>Password</Form.Label>
-            <Form.Control type="password" placeholder="Password" />
-          </Form.Group>
-          <Form.Group className="mb-3" controlId="formBasicCheckbox">
-            <Form.Check type="checkbox" label="Check me out" />
+            <Form.Control  type="text"ref={bottomtextInput} placeholder="Enter Top Line Text here" onChange={handleBottomText}/>
           </Form.Group>
           <Form.Group controlId="formFile" className="mb-3">
           <Form.Label>Default file input example</Form.Label>
@@ -51,7 +58,20 @@ function App() {
         </Form>
   </Col>
     <Col md={8}>
-    
+
+    <Modal.Dialog>
+  <Modal.Header >
+    <Modal.Title>{toptext}</Modal.Title>
+  </Modal.Header>
+
+  <Modal.Body>
+    <p> <img ref={mainimg} style={{height:'auto',width:'100%'}}/></p>
+  </Modal.Body>
+
+  <Modal.Footer>
+  <Modal.Title>{bottomtext}</Modal.Title>
+  </Modal.Footer>
+</Modal.Dialog>
     
     
     </Col>
